@@ -1,0 +1,27 @@
+/* PlaceSpotter custom styles (Bootstrap does most of the work) */
+
+:root {
+    --brand: #1f7a6d;
+    --brand-dark: #17594f;
+}
+
+body {
+    background-color: #f6f7f9;
+}
+
+.bg-brand {
+    background-color: var(--brand);
+}
+
+.btn-brand {
+    background-color: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+}
+
+.btn-brand:hover,
+.btn-brand:focus {
+    background-color: var(--brand-dark);
+    border-color: var(--brand-dark);
+    color: #fff;
+}
