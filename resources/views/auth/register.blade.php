@@ -52,6 +52,10 @@
 
                     <button type="submit" class="btn btn-brand w-100">Register</button>
                 </form>
+
+                <p class="text-center text-muted small mt-3 mb-0">
+                    Already have an account? <a href="{{ route('login') }}">Log in</a>
+                </p>
             </div>
         </div>
     </div>
