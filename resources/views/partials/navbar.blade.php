@@ -16,6 +16,13 @@
                         <i class="bi bi-map"></i> Explore
                     </a>
                 </li>
+                @auth
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('places.create') ? 'active' : '' }}" href="{{ route('places.create') }}">
+                            <i class="bi bi-plus-circle"></i> Add place
+                        </a>
+                    </li>
+                @endauth
             </ul>
 
             <ul class="navbar-nav ms-auto">

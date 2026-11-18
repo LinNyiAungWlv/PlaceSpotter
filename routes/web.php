@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\PlaceController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
@@ -19,4 +20,7 @@ Route::middleware('guest')->group(function () {
 // pages only for logged in users
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+
+    Route::get('/places/create', [PlaceController::class, 'create'])->name('places.create');
+    Route::post('/places', [PlaceController::class, 'store'])->name('places.store');
 });
