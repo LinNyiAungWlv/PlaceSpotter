@@ -17,6 +17,22 @@
                     </a>
                 </li>
             </ul>
+
+            <ul class="navbar-nav ms-auto">
+                @auth
+                    <li class="nav-item">
+                        <span class="navbar-text text-white">
+                            <i class="bi bi-person-circle"></i> {{ auth()->user()->name }}
+                        </span>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('register') ? 'active' : '' }}" href="{{ route('register') }}">
+                            Register
+                        </a>
+                    </li>
+                @endauth
+            </ul>
         </div>
     </div>
 </nav>
