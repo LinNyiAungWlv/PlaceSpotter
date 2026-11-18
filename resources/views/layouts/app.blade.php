@@ -19,6 +19,14 @@
     @include('partials.navbar')
 
     <main class="container py-4 flex-grow-1">
+        {{-- one-time messages like "Place added!" set with ->with('status', ...) --}}
+        @if (session('status'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('status') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         @yield('content')
     </main>
 

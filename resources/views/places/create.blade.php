@@ -9,10 +9,6 @@
             <div class="card-body p-4">
                 <h1 class="h4 mb-4">Add a place</h1>
 
-                @if (session('status'))
-                    <div class="alert alert-success">{{ session('status') }}</div>
-                @endif
-
                 <form method="POST" action="{{ route('places.store') }}" novalidate>
                     @csrf
 

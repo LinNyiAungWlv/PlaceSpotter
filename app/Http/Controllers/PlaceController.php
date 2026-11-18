@@ -16,10 +16,10 @@ class PlaceController extends Controller
 
     public function store(PlaceRequest $request)
     {
-        // PlaceRequest has already validated the input at this point
-        // TODO: save the place to the database
-        return back()
-            ->withInput()
-            ->with('status', 'Looks good! Saving places is coming next.');
+        // PlaceRequest has already validated the input at this point.
+        // Creating through the relationship sets user_id to the logged in user.
+        $request->user()->places()->create($request->validated());
+
+        return redirect()->route('home')->with('status', 'Place added!');
     }
 }
