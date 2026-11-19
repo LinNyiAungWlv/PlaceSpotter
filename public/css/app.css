@@ -25,3 +25,19 @@ body {
     border-color: var(--brand-dark);
     color: #fff;
 }
+
+/* same height for every card photo, cropped to fill */
+.place-photo {
+    height: 180px;
+    object-fit: cover;
+}
+
+/* grey box with the category icon when a place has no photo */
+.place-photo-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e9ecef;
+    color: #adb5bd;
+    font-size: 3rem;
+}

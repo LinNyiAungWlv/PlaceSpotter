@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,6 +18,12 @@ class Place extends Model
             'latitude' => 'float',
             'longitude' => 'float',
         ];
+    }
+
+    // $place->photo_url gives the full URL of the photo, or null if there is none
+    protected function photoUrl(): Attribute
+    {
+        return Attribute::get(fn () => $this->photo_path ? asset('storage/' . $this->photo_path) : null);
     }
 
     public function user(): BelongsTo

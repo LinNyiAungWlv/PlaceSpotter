@@ -20,6 +20,8 @@ class PlaceRequest extends FormRequest
             'description' => ['required', 'string', 'max:2000'],
             'latitude' => ['required', 'numeric', 'between:-90,90'],
             'longitude' => ['required', 'numeric', 'between:-180,180'],
+            // a photo is needed when adding a place, but optional when editing (keeps the old one)
+            'photo' => [$this->isMethod('post') ? 'required' : 'nullable', 'image', 'max:8192'],
         ];
     }
 

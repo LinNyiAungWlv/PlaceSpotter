@@ -9,7 +9,7 @@
             <div class="card-body p-4">
                 <h1 class="h4 mb-4">Add a place</h1>
 
-                <form method="POST" action="{{ route('places.store') }}" novalidate>
+                <form method="POST" action="{{ route('places.store') }}" enctype="multipart/form-data" novalidate>
                     @csrf
 
                     @include('places._form')

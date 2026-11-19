@@ -37,6 +37,17 @@
     @enderror
 </div>
 
+<div class="mb-3">
+    <label for="photo" class="form-label">Photo</label>
+    <input type="file" id="photo" name="photo" accept="image/*"
+           class="form-control @error('photo') is-invalid @enderror">
+    @error('photo')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @else
+        <div class="form-text">An image file (e.g. JPG or PNG), up to 8 MB.</div>
+    @enderror
+</div>
+
 <div class="row g-3 mb-4">
     <div class="col-sm-6">
         <label for="latitude" class="form-label">Latitude</label>
