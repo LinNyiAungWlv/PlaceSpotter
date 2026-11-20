@@ -39,12 +39,23 @@
 
 <div class="mb-3">
     <label for="photo" class="form-label">Photo</label>
+
+    {{-- when editing, show the current photo --}}
+    @if (isset($place) && $place->photo_url)
+        <div class="mb-2">
+            <img src="{{ $place->photo_url }}" alt="Current photo" class="rounded border" style="max-height: 120px;">
+        </div>
+    @endif
+
     <input type="file" id="photo" name="photo" accept="image/*"
            class="form-control @error('photo') is-invalid @enderror">
     @error('photo')
         <div class="invalid-feedback">{{ $message }}</div>
     @else
-        <div class="form-text">An image file (e.g. JPG or PNG), up to 8 MB.</div>
+        <div class="form-text">
+            An image file (e.g. JPG or PNG), up to 8 MB.
+            @isset($place) Leave empty to keep the current photo. @endisset
+        </div>
     @enderror
 </div>
 

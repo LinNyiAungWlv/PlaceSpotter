@@ -25,10 +25,3 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
-
-# Personal planning notes
-/PLAN.md
-
-# AI tool guideline files from the Laravel skeleton
-/CLAUDE.md
-/AGENTS.md

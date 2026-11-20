@@ -8,7 +8,14 @@ class PlaceRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // only logged in users reach this (auth middleware), owner checks come with the policy
+        $place = $this->route('place');
+
+        // editing: only the owner (PlacePolicy), checked before validation so others get a 403
+        if ($place) {
+            return $this->user()->can('update', $place);
+        }
+
+        // adding: any logged in user (the auth middleware already checked that)
         return true;
     }
 

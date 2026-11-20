@@ -27,4 +27,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/places/create', [PlaceController::class, 'create'])->name('places.create');
     Route::post('/places', [PlaceController::class, 'store'])->name('places.store');
+
+    // the policy checks inside the controller make sure only the owner gets through
+    Route::get('/places/{place}/edit', [PlaceController::class, 'edit'])->whereNumber('place')->name('places.edit');
+    Route::put('/places/{place}', [PlaceController::class, 'update'])->whereNumber('place')->name('places.update');
+    Route::delete('/places/{place}', [PlaceController::class, 'destroy'])->whereNumber('place')->name('places.destroy');
 });

@@ -30,6 +30,25 @@
 
                 {{-- pre-line keeps the line breaks the user typed, {{ }} escapes any HTML --}}
                 <p class="mb-0 text-pre-line">{{ $place->description }}</p>
+
+                {{-- only the owner sees these buttons (PlacePolicy) --}}
+                @can('update', $place)
+                    <div class="d-flex gap-2 mt-4 pt-3 border-top">
+                        <a href="{{ route('places.edit', $place) }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        @can('delete', $place)
+                            <form method="POST" action="{{ route('places.destroy', $place) }}"
+                                  onsubmit="return confirm('Delete this place? This cannot be undone.')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        @endcan
+                    </div>
+                @endcan
             </div>
         </div>
     </div>
