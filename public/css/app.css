@@ -32,6 +32,22 @@ body {
     object-fit: cover;
 }
 
+/* bigger photo on the place detail page */
+.place-photo-lg {
+    height: 240px;
+}
+
+@media (min-width: 768px) {
+    .place-photo-lg {
+        height: 380px;
+    }
+}
+
+/* keep line breaks typed in descriptions */
+.text-pre-line {
+    white-space: pre-line;
+}
+
 /* grey box with the category icon when a place has no photo */
 .place-photo-empty {
     display: flex;

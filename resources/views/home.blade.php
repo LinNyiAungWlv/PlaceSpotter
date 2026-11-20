@@ -27,7 +27,10 @@
                             <span class="badge text-bg-light border mb-2">
                                 <i class="bi {{ $place->category->icon }}"></i> {{ $place->category->name }}
                             </span>
-                            <h2 class="h5 card-title">{{ $place->name }}</h2>
+                            <h2 class="h5 card-title">
+                                {{-- stretched-link makes the whole card clickable --}}
+                                <a href="{{ route('places.show', $place) }}" class="stretched-link text-reset text-decoration-none">{{ $place->name }}</a>
+                            </h2>
                             <p class="card-text text-muted small">{{ Str::limit($place->description, 100) }}</p>
                         </div>
                         <div class="card-footer bg-white text-muted small">

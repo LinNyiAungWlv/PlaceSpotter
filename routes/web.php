@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// anyone can view a place; whereNumber stops "/places/create" being read as a place id
+Route::get('/places/{place}', [PlaceController::class, 'show'])->whereNumber('place')->name('places.show');
+
 // pages only for visitors who are NOT logged in
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'create'])->name('register');

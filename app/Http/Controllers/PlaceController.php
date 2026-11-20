@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PlaceRequest;
 use App\Models\Category;
+use App\Models\Place;
 
 class PlaceController extends Controller
 {
@@ -23,8 +24,16 @@ class PlaceController extends Controller
         $data['photo_path'] = $request->file('photo')->store('places', 'public');
 
         // creating through the relationship sets user_id to the logged in user
-        $request->user()->places()->create($data);
+        $place = $request->user()->places()->create($data);
 
-        return redirect()->route('home')->with('status', 'Place added!');
+        return redirect()->route('places.show', $place)->with('status', 'Place added!');
+    }
+
+    // Laravel finds the place from the id in the URL, or shows a 404
+    public function show(Place $place)
+    {
+        $place->load(['category', 'user']);
+
+        return view('places.show', compact('place'));
     }
 }
