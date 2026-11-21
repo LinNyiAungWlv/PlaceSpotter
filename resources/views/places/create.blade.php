@@ -2,6 +2,12 @@
 
 @section('title', 'Add a place')
 
+@include('partials.leaflet')
+
+@push('scripts')
+    <script src="{{ asset('js/place-form.js') }}"></script>
+@endpush
+
 @section('content')
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-7">

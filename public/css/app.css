@@ -43,6 +43,16 @@ body {
     }
 }
 
+/* small map for picking the location on the add/edit form */
+.map-form {
+    height: 280px;
+}
+
+/* crosshair shows the map can be clicked (two classes so it beats Leaflet's "grab" cursor) */
+.map-form.leaflet-grab {
+    cursor: crosshair;
+}
+
 /* photo inside a map popup */
 .popup-photo {
     width: 180px;

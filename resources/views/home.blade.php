@@ -3,10 +3,7 @@
 @section('title', 'Explore')
 
 {{-- Leaflet is only loaded on pages that show a map --}}
-@push('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
-@endpush
+@include('partials.leaflet')
 
 @section('content')
     <h1 class="h3 mb-3">Explore places</h1>
@@ -54,7 +51,5 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/explore.js') }}"></script>
 @endpush

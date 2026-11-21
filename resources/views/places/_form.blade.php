@@ -59,23 +59,31 @@
     @enderror
 </div>
 
-<div class="row g-3 mb-4">
-    <div class="col-sm-6">
-        <label for="latitude" class="form-label">Latitude</label>
-        <input type="number" id="latitude" name="latitude" step="any"
-               value="{{ old('latitude', $place->latitude ?? '') }}"
-               class="form-control @error('latitude') is-invalid @enderror" required>
-        @error('latitude')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-sm-6">
-        <label for="longitude" class="form-label">Longitude</label>
-        <input type="number" id="longitude" name="longitude" step="any"
-               value="{{ old('longitude', $place->longitude ?? '') }}"
-               class="form-control @error('longitude') is-invalid @enderror" required>
-        @error('longitude')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
+<div class="mb-4">
+    <label class="form-label mb-1">Location</label>
+    <div class="form-text mt-0 mb-2">Click the map to set the location, or drag the pin.</div>
+
+    {{-- place-form.js keeps this map and the two inputs below in sync --}}
+    <div id="location-map" class="map-form rounded border mb-2"></div>
+
+    <div class="row g-2">
+        <div class="col-6">
+            <label for="latitude" class="form-label small text-muted mb-1">Latitude</label>
+            <input type="number" id="latitude" name="latitude" step="any"
+                   value="{{ old('latitude', $place->latitude ?? '') }}"
+                   class="form-control form-control-sm @error('latitude') is-invalid @enderror" required>
+            @error('latitude')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="col-6">
+            <label for="longitude" class="form-label small text-muted mb-1">Longitude</label>
+            <input type="number" id="longitude" name="longitude" step="any"
+                   value="{{ old('longitude', $place->longitude ?? '') }}"
+                   class="form-control form-control-sm @error('longitude') is-invalid @enderror" required>
+            @error('longitude')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
     </div>
 </div>
