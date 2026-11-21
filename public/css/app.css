@@ -32,6 +32,70 @@ body {
     object-fit: cover;
 }
 
+/* phones: compact place cards with the photo on the left, so 12 places don't make a very long page */
+@media (max-width: 575.98px) {
+    .place-card {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        grid-template-rows: 1fr auto;
+    }
+
+    /* the photo goes down the left side, next to the text and the footer */
+    .place-card .place-photo {
+        grid-row: 1 / 3;
+        width: 110px;
+        height: 100%;
+        min-height: 110px;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: var(--bs-card-inner-border-radius);
+        font-size: 2rem;
+    }
+
+    .place-card .card-body {
+        padding: 0.75rem;
+    }
+
+    .place-card .card-title {
+        font-size: 1rem;
+    }
+
+    /* at most 2 lines of the description */
+    .place-card .card-text {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow: hidden;
+        margin-bottom: 0;
+    }
+
+    .place-card .card-footer {
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+/* touch screens: small buttons and inputs made easier to use with a finger */
+@media (pointer: coarse) {
+    /* about 40px tall instead of 31px */
+    .btn-sm {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    /* iPhones zoom into any input with text smaller than 16px when it is tapped */
+    .form-control-sm,
+    .form-select-sm {
+        font-size: 16px;
+    }
+
+    /* bigger map + and - buttons (three classes so it beats Leaflet's own 30px rule) */
+    .leaflet-touch .leaflet-bar.leaflet-control-zoom a {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+    }
+}
+
 /* map on the explore page */
 .map-explore {
     height: 300px;

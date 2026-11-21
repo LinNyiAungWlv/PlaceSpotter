@@ -12,7 +12,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-7">
         <div class="card shadow-sm">
-            <div class="card-body p-4">
+            <div class="card-body p-3 p-sm-4">
                 <h1 class="h4 mb-4">Add a place</h1>
 
                 <form method="POST" action="{{ route('places.store') }}" enctype="multipart/form-data" novalidate>

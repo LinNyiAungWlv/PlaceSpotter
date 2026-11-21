@@ -24,7 +24,7 @@
                 </div>
             @endif
 
-            <div class="card-body p-4">
+            <div class="card-body p-3 p-sm-4">
                 <span class="badge text-bg-light border mb-2">
                     <i class="bi {{ $place->category->icon }}"></i> {{ $place->category->name }}
                 </span>

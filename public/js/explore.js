@@ -88,7 +88,7 @@ function buildPopup(place) {
 // Same card as the one in home.blade.php, built with textContent (no innerHTML).
 function buildCard(place) {
     const column = el('div', 'col-sm-6 col-lg-4');
-    const card = el('div', 'card h-100 shadow-sm');
+    const card = el('div', 'card place-card h-100 shadow-sm');
 
     if (place.photo_url) {
         const img = el('img', 'card-img-top place-photo');

@@ -39,7 +39,7 @@
     <div id="place-list" class="row g-3">
         @foreach ($places as $place)
             <div class="col-sm-6 col-lg-4">
-                <div class="card h-100 shadow-sm">
+                <div class="card place-card h-100 shadow-sm">
                     @if ($place->photo_url)
                         <img src="{{ $place->photo_url }}" class="card-img-top place-photo" alt="Photo of {{ $place->name }}">
                     @else
