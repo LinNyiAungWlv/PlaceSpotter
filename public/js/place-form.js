@@ -1,4 +1,4 @@
-// Add/edit place form: pick the location on a small map.
+// Add/edit place form: pick the location on a small map, and preview the photo.
 // The map and the latitude/longitude inputs are kept in sync both ways,
 // so the form still works by typing if the map can't load.
 
@@ -135,5 +135,109 @@ if (!('geolocation' in navigator)) {
             timeout: 10000, // give up after 10 seconds
             maximumAge: 0, // don't reuse an old position
         });
+    });
+}
+
+// ---- Photo: preview and "Take photo" button ----
+
+const photoInput = document.getElementById('photo');
+const cameraInput = document.getElementById('camera-input');
+const takePhotoButton = document.getElementById('take-photo');
+const photoPreview = document.getElementById('photo-preview');
+const previewImage = photoPreview.querySelector('img');
+const photoInfo = document.getElementById('photo-info');
+const photoError = document.getElementById('photo-error');
+const currentPhoto = document.getElementById('current-photo'); // only there when editing a place with a photo
+
+let previewUrl = null;
+
+// e.g. "3.4 MB" or "640 KB"
+function formatSize(bytes) {
+    if (bytes >= 1024 * 1024) {
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    return Math.round(bytes / 1024) + ' KB';
+}
+
+function showPhotoError(message) {
+    photoError.textContent = message;
+    photoError.classList.toggle('d-none', !message);
+}
+
+// forgets the chosen photo, when editing the current photo shows again
+function clearPhoto() {
+    photoInput.value = '';
+
+    if (previewUrl) {
+        URL.revokeObjectURL(previewUrl); // free the memory used by the old preview
+        previewUrl = null;
+    }
+
+    previewImage.removeAttribute('src');
+    photoPreview.classList.add('d-none');
+
+    if (currentPhoto) {
+        currentPhoto.classList.remove('d-none');
+    }
+}
+
+photoInput.addEventListener('change', function () {
+    const file = photoInput.files[0];
+
+    // a new file was picked, so hide any old error
+    showPhotoError('');
+    photoInput.classList.remove('is-invalid');
+
+    if (!file) {
+        clearPhoto();
+        return;
+    }
+
+    // the server checks this too, this just tells the user straight away
+    if (!file.type.startsWith('image/') || file.type === 'image/svg+xml') {
+        clearPhoto();
+        showPhotoError('"' + file.name + '" is not a photo. Choose a JPG or PNG image.');
+        return;
+    }
+
+    if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+    }
+
+    // a temporary local URL, so the photo can be shown without uploading it
+    previewUrl = URL.createObjectURL(file);
+    previewImage.src = previewUrl;
+    photoInfo.textContent = file.name + ' · ' + formatSize(file.size);
+    photoPreview.classList.remove('d-none');
+
+    if (currentPhoto) {
+        currentPhoto.classList.add('d-none');
+    }
+});
+
+document.getElementById('remove-photo').addEventListener('click', clearPhoto);
+
+// phones only (touch screen): "Take photo" opens the camera straight away.
+// The normal input has no capture attribute, so people can still pick a photo from the gallery.
+if (window.matchMedia('(pointer: coarse)').matches) {
+    takePhotoButton.classList.remove('d-none');
+
+    takePhotoButton.addEventListener('click', function () {
+        cameraInput.click();
+    });
+
+    // move the photo into the real input (the one that is sent with the form)
+    cameraInput.addEventListener('change', function () {
+        if (cameraInput.files.length === 0) {
+            return;
+        }
+
+        const transfer = new DataTransfer();
+        transfer.items.add(cameraInput.files[0]);
+        photoInput.files = transfer.files;
+        cameraInput.value = '';
+
+        photoInput.dispatchEvent(new Event('change'));
     });
 }

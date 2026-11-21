@@ -38,17 +38,35 @@
 </div>
 
 <div class="mb-3">
-    <label for="photo" class="form-label">Photo</label>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <label for="photo" class="form-label mb-0">Photo</label>
+        {{-- only shown on phones (place-form.js), opens the back camera straight away --}}
+        <button type="button" id="take-photo" class="btn btn-outline-secondary btn-sm d-none">
+            <i class="bi bi-camera"></i> Take photo
+        </button>
+    </div>
 
     {{-- when editing, show the current photo --}}
     @if (isset($place) && $place->photo_url)
-        <div class="mb-2">
-            <img src="{{ $place->photo_url }}" alt="Current photo" class="rounded border" style="max-height: 120px;">
+        <div id="current-photo" class="mb-2">
+            <img src="{{ $place->photo_url }}" alt="Current photo" class="photo-preview rounded border">
         </div>
     @endif
 
+    {{-- place-form.js shows the chosen photo here before the form is saved --}}
+    <div id="photo-preview" class="mb-2 d-none">
+        <img alt="Preview of the chosen photo" class="photo-preview rounded border">
+        <div class="d-flex align-items-center gap-2 mt-1 small">
+            <span id="photo-info" class="text-muted text-truncate"></span>
+            <button type="button" id="remove-photo" class="btn btn-link btn-sm p-0 text-danger">Remove</button>
+        </div>
+    </div>
+
     <input type="file" id="photo" name="photo" accept="image/*"
            class="form-control @error('photo') is-invalid @enderror">
+    {{-- no name, so it is never sent: its photo is copied into the input above --}}
+    <input type="file" id="camera-input" accept="image/*" capture="environment" class="d-none">
+    <div id="photo-error" class="small text-danger mt-1 d-none"></div>
     @error('photo')
         <div class="invalid-feedback">{{ $message }}</div>
     @else

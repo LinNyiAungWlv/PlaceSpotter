@@ -79,6 +79,12 @@ body {
     }
 }
 
+/* current photo and chosen photo on the add/edit form */
+.photo-preview {
+    max-width: 100%;
+    max-height: 160px;
+}
+
 /* keep line breaks typed in descriptions */
 .text-pre-line {
     white-space: pre-line;
