@@ -60,8 +60,16 @@
 </div>
 
 <div class="mb-4">
-    <label class="form-label mb-1">Location</label>
+    <div class="d-flex justify-content-between align-items-center mb-1">
+        <label class="form-label mb-0">Location</label>
+        {{-- type="button" so it does not submit the form --}}
+        <button type="button" id="use-location" class="btn btn-outline-secondary btn-sm">
+            <span class="spinner-border spinner-border-sm d-none" aria-hidden="true"></span>
+            <i class="bi bi-crosshair"></i> Use my location
+        </button>
+    </div>
     <div class="form-text mt-0 mb-2">Click the map to set the location, or drag the pin.</div>
+    <div id="location-status" class="small mb-2 d-none" role="status"></div>
 
     {{-- place-form.js keeps this map and the two inputs below in sync --}}
     <div id="location-map" class="map-form rounded border mb-2"></div>
