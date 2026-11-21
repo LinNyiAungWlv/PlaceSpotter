@@ -11,6 +11,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // JSON list of places for the map (public)
 Route::get('/search', [PlaceSearchController::class, 'index'])->name('places.search');
+// JSON list of places near a point, nearest first (public)
+Route::get('/search/nearby', [PlaceSearchController::class, 'nearby'])->name('places.nearby');
 
 // anyone can view a place; whereNumber stops "/places/create" being read as a place id
 Route::get('/places/{place}', [PlaceController::class, 'show'])->whereNumber('place')->name('places.show');

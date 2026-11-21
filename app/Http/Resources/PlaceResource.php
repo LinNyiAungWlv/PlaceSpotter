@@ -27,6 +27,8 @@ class PlaceResource extends JsonResource
             'likes_count' => $this->likes_count ?? 0,
             'author' => $this->user->name,
             'url' => route('places.show', $this->resource),
+            // only there when the query worked it out (Place::nearby), left out of /search
+            'distance_km' => $this->when(isset($this->distance), fn () => round($this->distance, 2)),
         ];
     }
 }
