@@ -71,7 +71,7 @@
         <div class="invalid-feedback">{{ $message }}</div>
     @else
         <div class="form-text">
-            An image file (e.g. JPG or PNG), up to 8 MB.
+            An image file (e.g. JPG or PNG), up to 8 MB. Big photos are made smaller before upload.
             @isset($place) Leave empty to keep the current photo. @endisset
         </div>
     @enderror

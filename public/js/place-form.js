@@ -138,7 +138,7 @@ if (!('geolocation' in navigator)) {
     });
 }
 
-// ---- Photo: preview and "Take photo" button ----
+// ---- Photo: preview, resize and "Take photo" button ----
 
 const photoInput = document.getElementById('photo');
 const cameraInput = document.getElementById('camera-input');
@@ -165,8 +165,100 @@ function showPhotoError(message) {
     photoError.classList.toggle('d-none', !message);
 }
 
+// ---- shrinking big photos before upload ----
+
+const MAX_SIDE = 1280; // longest side in pixels, big enough for the detail page
+const SMALL_FILE = 1024 * 1024; // photos already small (1 MB and up to 1280px) are left as they are
+
+const submitButton = photoInput.form.querySelector('button[type="submit"]');
+const submitLabel = Array.from(submitButton.childNodes); // icon + text, put back after
+
+let pickCount = 0; // which pick is the latest, so an old slow resize can't overwrite a newer photo
+
+// stops the form being sent while the photo is still being made smaller
+function setPreparing(preparing) {
+    submitButton.disabled = preparing;
+
+    if (preparing) {
+        submitButton.textContent = 'Preparing photo…';
+    } else {
+        submitButton.replaceChildren(...submitLabel);
+    }
+}
+
+// loads a file into an <img>, gives null if the browser can't read it
+function loadImage(file) {
+    return new Promise(function (resolve) {
+        const url = URL.createObjectURL(file);
+        const image = new Image();
+
+        image.onload = function () {
+            URL.revokeObjectURL(url);
+            resolve(image);
+        };
+        image.onerror = function () {
+            URL.revokeObjectURL(url);
+            resolve(null);
+        };
+
+        image.src = url;
+    });
+}
+
+// gives { file, width, height } with a smaller JPEG copy of the photo,
+// or null when the original should be kept (already small, a GIF, or the browser can't read it)
+async function shrinkPhoto(file) {
+    if (file.type === 'image/gif') {
+        return null; // resizing would lose the animation
+    }
+
+    const image = await loadImage(file);
+
+    if (!image) {
+        return null;
+    }
+
+    // naturalWidth/Height already follow the phone's rotation info, so portrait photos stay upright
+    const longest = Math.max(image.naturalWidth, image.naturalHeight);
+
+    if (longest <= MAX_SIDE && file.size <= SMALL_FILE) {
+        return null;
+    }
+
+    const scale = Math.min(1, MAX_SIDE / longest);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(image.naturalWidth * scale);
+    canvas.height = Math.round(image.naturalHeight * scale);
+
+    const context = canvas.getContext('2d');
+    // JPEG has no transparency, so a white background instead of black
+    context.fillStyle = '#fff';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise(function (resolve) {
+        canvas.toBlob(resolve, 'image/jpeg', 0.85);
+    });
+
+    // keep the original if it failed, or if it wasn't resized and the copy isn't any smaller
+    if (!blob || (scale === 1 && blob.size >= file.size)) {
+        return null;
+    }
+
+    // e.g. IMG_2041.HEIC -> IMG_2041.jpg
+    const name = file.name.replace(/\.[^.]+$/, '') + '.jpg';
+
+    return {
+        file: new File([blob], name, { type: 'image/jpeg', lastModified: Date.now() }),
+        width: canvas.width,
+        height: canvas.height,
+    };
+}
+
 // forgets the chosen photo, when editing the current photo shows again
 function clearPhoto() {
+    pickCount++; // a resize still running for the old photo is ignored
+    setPreparing(false);
     photoInput.value = '';
 
     if (previewUrl) {
@@ -182,7 +274,7 @@ function clearPhoto() {
     }
 }
 
-photoInput.addEventListener('change', function () {
+photoInput.addEventListener('change', async function () {
     const file = photoInput.files[0];
 
     // a new file was picked, so hide any old error
@@ -201,14 +293,40 @@ photoInput.addEventListener('change', function () {
         return;
     }
 
+    const pick = ++pickCount;
+    setPreparing(true);
+
+    const smaller = await shrinkPhoto(file);
+
+    if (pick !== pickCount) {
+        return; // another photo was picked (or Remove clicked) while this one was resizing
+    }
+
+    setPreparing(false);
+
+    let chosen = file;
+    let info = file.name + ' · ' + formatSize(file.size);
+
+    if (smaller) {
+        // swap the big file in the input for the smaller one, so that is what gets uploaded
+        // (setting files from code does not fire "change" again)
+        const transfer = new DataTransfer();
+        transfer.items.add(smaller.file);
+        photoInput.files = transfer.files;
+
+        chosen = smaller.file;
+        info = smaller.file.name + ' · ' + formatSize(file.size) + ' → ' + formatSize(smaller.file.size)
+            + ' (' + smaller.width + '×' + smaller.height + ')';
+    }
+
     if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
     }
 
     // a temporary local URL, so the photo can be shown without uploading it
-    previewUrl = URL.createObjectURL(file);
+    previewUrl = URL.createObjectURL(chosen);
     previewImage.src = previewUrl;
-    photoInfo.textContent = file.name + ' · ' + formatSize(file.size);
+    photoInfo.textContent = info;
     photoPreview.classList.remove('d-none');
 
     if (currentPhoto) {
