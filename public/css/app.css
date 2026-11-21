@@ -53,6 +53,11 @@ body {
     cursor: crosshair;
 }
 
+/* small read-only map on the place detail page */
+.map-mini {
+    height: 220px;
+}
+
 /* photo inside a map popup */
 .popup-photo {
     width: 180px;
