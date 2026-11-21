@@ -38,14 +38,7 @@
                             <i class="bi bi-pencil"></i> Edit
                         </a>
                         @can('delete', $place)
-                            <form method="POST" action="{{ route('places.destroy', $place) }}"
-                                  onsubmit="return confirm('Delete this place? This cannot be undone.')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger btn-sm">
-                                    <i class="bi bi-trash"></i> Delete
-                                </button>
-                            </form>
+                            @include('places._delete_button')
                         @endcan
                     </div>
                 @endcan

@@ -48,6 +48,18 @@ body {
     white-space: pre-line;
 }
 
+/* small square photo in the My places list */
+.place-thumb {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.place-thumb.place-photo-empty {
+    font-size: 1.5rem;
+}
+
 /* grey box with the category icon when a place has no photo */
 .place-photo-empty {
     display: flex;

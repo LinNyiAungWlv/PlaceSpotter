@@ -5,11 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PlaceRequest;
 use App\Models\Category;
 use App\Models\Place;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class PlaceController extends Controller
 {
+    // places added by the logged in user, newest first
+    public function mine(Request $request)
+    {
+        $places = $request->user()->places()->with('category')->latest()->get();
+
+        return view('places.mine', compact('places'));
+    }
+
     public function create()
     {
         $categories = Category::orderBy('name')->get();
@@ -73,7 +82,7 @@ class PlaceController extends Controller
         $this->deletePhoto($place);
         $place->delete();
 
-        return redirect()->route('home')->with('status', 'Place deleted.');
+        return redirect()->route('places.mine')->with('status', 'Place deleted.');
     }
 
     // removes the photo file so old uploads don't pile up in storage

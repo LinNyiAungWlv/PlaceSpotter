@@ -33,6 +33,12 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
+                                <a class="dropdown-item {{ request()->routeIs('places.mine') ? 'active' : '' }}" href="{{ route('places.mine') }}">
+                                    <i class="bi bi-collection"></i> My places
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
                                 {{-- logout is a POST form so it is protected by the CSRF token --}}
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf

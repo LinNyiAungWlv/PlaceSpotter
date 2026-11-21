@@ -25,6 +25,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
+    Route::get('/my-places', [PlaceController::class, 'mine'])->name('places.mine');
+
     Route::get('/places/create', [PlaceController::class, 'create'])->name('places.create');
     Route::post('/places', [PlaceController::class, 'store'])->name('places.store');
 
