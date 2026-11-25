@@ -17,7 +17,9 @@
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ route('places.index') }}">Places</a></li>
                     @auth
+                        <li class="nav-item"><a class="nav-link" href="{{ route('places.create') }}">Add place</a></li>
                         <li class="nav-item"><span class="nav-link text-white">Hi, {{ auth()->user()->name }}</span></li>
                         <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
