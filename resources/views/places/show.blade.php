@@ -2,6 +2,10 @@
 
 @section('title', $place->name.' - PlaceSpotter')
 
+@push('styles')
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+@endpush
+
 @section('content')
     <div class="row justify-content-center">
         <div class="col-lg-8">
@@ -12,7 +16,8 @@
                     <h1 class="h3">{{ $place->name }}</h1>
                     <p class="text-muted small">Shared by {{ $place->user->name }} · {{ $place->created_at->diffForHumans() }}</p>
                     <p>{{ $place->description }}</p>
-                    <p class="small text-muted mb-2">📍 {{ $place->latitude }}, {{ $place->longitude }}</p>
+                    <div id="place-map" class="rounded mb-3" style="height: 220px;"
+                         data-lat="{{ $place->latitude }}" data-lng="{{ $place->longitude }}"></div>
                     <p class="mb-0">❤️ {{ $place->likes_count }} likes · 💬 {{ $place->comments_count }} comments</p>
                 </div>
 
@@ -33,3 +38,17 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        // small map with one pin for this place
+        const box = document.getElementById('place-map');
+        const spot = [box.dataset.lat, box.dataset.lng];
+        const placeMap = L.map(box).setView(spot, 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+        }).addTo(placeMap);
+        L.marker(spot).addTo(placeMap);
+    </script>
+@endpush

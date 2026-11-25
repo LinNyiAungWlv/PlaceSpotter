@@ -20,4 +20,5 @@ Route::middleware('auth')->group(function () {
 });
 
 // anyone can browse places
+Route::get('/map/places', [PlaceController::class, 'mapData'])->name('places.mapData');
 Route::resource('places', PlaceController::class)->only(['index', 'show']);

@@ -17,6 +17,22 @@ class PlaceController extends Controller
         return view('places.index', compact('places'));
     }
 
+    // JSON list of places for the map pins
+    public function mapData()
+    {
+        $places = Place::with('category')->latest()->get()->map(fn ($place) => [
+            'id' => $place->id,
+            'name' => $place->name,
+            'category' => $place->category->name,
+            'color' => $place->category->color,
+            'lat' => (float) $place->latitude,
+            'lng' => (float) $place->longitude,
+            'url' => route('places.show', $place),
+        ]);
+
+        return response()->json($places);
+    }
+
     public function create()
     {
         $categories = Category::orderBy('name')->get();
