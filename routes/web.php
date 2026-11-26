@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
@@ -21,4 +22,5 @@ Route::middleware('auth')->group(function () {
 
 // anyone can browse places
 Route::get('/search/places', [PlaceController::class, 'search'])->name('places.search');
+Route::get('/places/{place}/weather', [WeatherController::class, 'show'])->name('places.weather');
 Route::resource('places', PlaceController::class)->only(['index', 'show']);

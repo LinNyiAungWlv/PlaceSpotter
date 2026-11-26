@@ -16,6 +16,11 @@
                     <h1 class="h3">{{ $place->name }}</h1>
                     <p class="text-muted small">Shared by {{ $place->user->name }} · {{ $place->created_at->diffForHumans() }}</p>
                     <p>{{ $place->description }}</p>
+
+                    <div id="weather" class="alert alert-secondary" data-url="{{ route('places.weather', $place) }}">
+                        Loading weather...
+                    </div>
+
                     <div id="place-map" class="rounded mb-3" style="height: 220px;"
                          data-lat="{{ $place->latitude }}" data-lng="{{ $place->longitude }}"></div>
                     <p class="mb-0">❤️ {{ $place->likes_count }} likes · 💬 {{ $place->comments_count }} comments</p>
@@ -51,4 +56,5 @@
         }).addTo(placeMap);
         L.marker(spot).addTo(placeMap);
     </script>
+    <script src="{{ asset('js/weather.js') }}"></script>
 @endpush
