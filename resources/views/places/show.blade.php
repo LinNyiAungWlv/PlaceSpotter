@@ -23,7 +23,35 @@
 
                     <div id="place-map" class="rounded mb-3" style="height: 220px;"
                          data-lat="{{ $place->latitude }}" data-lng="{{ $place->longitude }}"></div>
-                    <p class="mb-0">❤️ {{ $place->likes_count }} likes · 💬 {{ $place->comments_count }} comments</p>
+                    @auth
+                        <button type="button" id="like-button" data-url="{{ route('places.like', $place) }}"
+                                class="btn {{ $liked ? 'btn-danger' : 'btn-outline-danger' }}">
+                            ❤️ <span id="like-count">{{ $place->likes_count }}</span>
+                        </button>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-danger">❤️ {{ $place->likes_count }} · Log in to like</a>
+                    @endauth
+                </div>
+
+                <div class="card-body border-top p-4">
+                    <h2 class="h5">💬 Comments (<span id="comment-count">{{ $place->comments->count() }}</span>)</h2>
+
+                    @auth
+                        <form id="comment-form" data-url="{{ route('comments.store', $place) }}" class="mb-3">
+                            <textarea name="body" id="comment-body" rows="2" class="form-control mb-2"
+                                      placeholder="Write a comment..." maxlength="1000"></textarea>
+                            <div id="comment-error" class="text-danger small mb-2"></div>
+                            <button type="submit" class="btn btn-success btn-sm">Post comment</button>
+                        </form>
+                    @else
+                        <p class="small"><a href="{{ route('login') }}">Log in</a> to leave a comment.</p>
+                    @endauth
+
+                    <div id="comment-list">
+                        @foreach ($place->comments as $comment)
+                            @include('comments._comment')
+                        @endforeach
+                    </div>
                 </div>
 
                 @can('update', $place)
@@ -57,4 +85,5 @@
         L.marker(spot).addTo(placeMap);
     </script>
     <script src="{{ asset('js/weather.js') }}"></script>
+    <script src="{{ asset('js/place-interactions.js') }}"></script>
 @endpush

@@ -75,9 +75,12 @@ class PlaceController extends Controller
 
     public function show(Place $place)
     {
-        $place->load('category', 'user')->loadCount('likes', 'comments');
+        $place->load(['category', 'user', 'comments' => fn ($query) => $query->with('user')->latest()])
+            ->loadCount('likes');
 
-        return view('places.show', compact('place'));
+        $liked = auth()->check() && $place->likes()->where('user_id', auth()->id())->exists();
+
+        return view('places.show', compact('place', 'liked'));
     }
 
     public function edit(Place $place)
