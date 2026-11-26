@@ -49,8 +49,24 @@ class PlaceController extends Controller
                         ->orWhere('description', 'like', "%{$search}%");
                 });
             })
-            ->latest()
+            ->when(
+                $request->filled(['lat', 'lng']),
+                fn ($query) => $this->nearby($query, (float) $request->lat, (float) $request->lng),
+                fn ($query) => $query->latest()
+            )
             ->get();
+    }
+
+    // "Near me": places within 10 km, closest first (Haversine formula, distance in km)
+    private function nearby($query, float $lat, float $lng)
+    {
+        return $query
+            ->selectRaw(
+                '(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance',
+                [$lat, $lng, $lat]
+            )
+            ->having('distance', '<', 10)
+            ->orderBy('distance');
     }
 
     public function create()

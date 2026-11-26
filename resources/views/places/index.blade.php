@@ -14,7 +14,11 @@
         @endauth
     </div>
 
-    <input type="search" id="search" class="form-control mb-2" placeholder="Search places..." autocomplete="off">
+    <div class="d-flex gap-2 mb-2">
+        <input type="search" id="search" class="form-control" placeholder="Search places..." autocomplete="off">
+        <button type="button" id="near-me" class="btn btn-outline-primary text-nowrap">📍 Near me</button>
+    </div>
+    <div id="near-status" class="small text-muted mb-2"></div>
 
     <div id="category-filter" class="d-flex flex-wrap gap-2 mb-3">
         <button type="button" class="btn btn-sm btn-dark" data-category="">All</button>
@@ -23,7 +27,7 @@
         @endforeach
     </div>
 
-    <div id="map" data-url="{{ route('places.search') }}" class="rounded shadow-sm mb-2" style="height: 400px;"></div>
+    <div id="map" data-url="{{ route('places.search') }}" class="rounded shadow-sm mb-2 places-map"></div>
     <p class="small text-muted mb-3"><span id="result-count">{{ $places->count() }}</span> places found</p>
 
     <div id="place-list" class="row g-3">

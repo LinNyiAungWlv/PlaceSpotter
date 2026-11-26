@@ -1,0 +1,21 @@
+/* PlaceSpotter custom styles (Bootstrap does most of the work) */
+
+.places-map {
+    height: 400px;
+}
+
+/* phones */
+@media (max-width: 576px) {
+    .places-map {
+        height: 260px;
+    }
+
+    h1.h3 {
+        font-size: 1.3rem;
+    }
+
+    /* bigger tap targets for fingers */
+    #category-filter .btn {
+        padding: 0.4rem 0.75rem;
+    }
+}

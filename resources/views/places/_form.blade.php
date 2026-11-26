@@ -27,6 +27,11 @@
     @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
 </div>
 
+<div class="d-flex align-items-center gap-2 mb-2">
+    <button type="button" id="use-location" class="btn btn-outline-primary btn-sm">📍 Use my current location</button>
+    <small id="location-status" class="text-muted"></small>
+</div>
+
 <div class="row">
     <div class="col-6 mb-3">
         <label for="latitude" class="form-label">Latitude</label>
@@ -43,11 +48,19 @@
 </div>
 
 <div class="mb-3">
-    <label for="photo" class="form-label">Photo</label>
+    <label for="photo" class="form-label d-block">Photo</label>
+    {{-- capture opens the phone's back camera directly --}}
+    <input type="file" id="camera" accept="image/*" capture="environment" class="d-none">
+    <button type="button" id="take-photo" class="btn btn-outline-secondary btn-sm mb-2">📷 Take a photo</button>
     <input type="file" id="photo" name="photo" accept="image/*"
            class="form-control @error('photo') is-invalid @enderror">
     @error('photo') <div class="invalid-feedback">{{ $message }}</div> @enderror
     @isset($place->photo)
         <div class="form-text">Leave empty to keep the current photo.</div>
     @endisset
+    <img id="photo-preview" class="img-fluid rounded mt-2 d-none" alt="Photo preview" style="max-height: 240px;">
 </div>
+
+@push('scripts')
+    <script src="{{ asset('js/place-form.js') }}"></script>
+@endpush
