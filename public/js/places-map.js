@@ -1,4 +1,4 @@
-// Map of all places using Leaflet + OpenStreetMap
+// Map of places (Leaflet + OpenStreetMap) with live search and category filter
 const map = L.map('map').setView([16.8, 96.15], 13); // Yangon
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -7,6 +7,12 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 const markers = L.layerGroup().addTo(map);
+const searchUrl = document.getElementById('map').dataset.url;
+const searchInput = document.getElementById('search');
+const categoryButtons = document.querySelectorAll('#category-filter button');
+
+let selectedCategory = '';
+let typingTimer;
 
 // stop user-typed text from being run as HTML
 function escapeHtml(text) {
@@ -15,10 +21,10 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function showPins(places) {
+function showPins(pins) {
     markers.clearLayers();
 
-    places.forEach(place => {
+    pins.forEach(place => {
         L.circleMarker([place.lat, place.lng], {
             radius: 9,
             color: '#fff',
@@ -30,12 +36,40 @@ function showPins(places) {
             .addTo(markers);
     });
 
-    if (places.length > 0) {
-        map.fitBounds(places.map(p => [p.lat, p.lng]), { padding: [30, 30] });
+    if (pins.length > 0) {
+        map.fitBounds(pins.map(p => [p.lat, p.lng]), { padding: [30, 30], maxZoom: 16 });
     }
 }
 
-// load the pins from Laravel as JSON
-fetch(document.getElementById('map').dataset.url)
-    .then(response => response.json())
-    .then(showPins);
+// ask Laravel for places matching the search + category, then update the page
+function loadPlaces() {
+    const params = new URLSearchParams({ search: searchInput.value, category: selectedCategory });
+
+    fetch(`${searchUrl}?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            showPins(data.pins);
+            document.getElementById('place-list').innerHTML = data.html;
+            document.getElementById('result-count').textContent = data.count;
+        });
+}
+
+// wait until the user stops typing for 300ms
+searchInput.addEventListener('input', () => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(loadPlaces, 300);
+});
+
+categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        selectedCategory = button.dataset.category;
+
+        // highlight the selected button
+        categoryButtons.forEach(b => b.classList.replace('btn-dark', 'btn-outline-dark'));
+        button.classList.replace('btn-outline-dark', 'btn-dark');
+
+        loadPlaces();
+    });
+});
+
+loadPlaces();

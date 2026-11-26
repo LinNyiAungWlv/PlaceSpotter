@@ -10,27 +10,47 @@ use Illuminate\Support\Facades\Storage;
 
 class PlaceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $places = Place::with('category', 'user')->withCount('likes', 'comments')->latest()->get();
+        $places = $this->filteredPlaces($request);
+        $categories = Category::orderBy('name')->get();
 
-        return view('places.index', compact('places'));
+        return view('places.index', compact('places', 'categories'));
     }
 
-    // JSON list of places for the map pins
-    public function mapData()
+    // AJAX: returns the card HTML and the map pins for the current filter
+    public function search(Request $request)
     {
-        $places = Place::with('category')->latest()->get()->map(fn ($place) => [
-            'id' => $place->id,
-            'name' => $place->name,
-            'category' => $place->category->name,
-            'color' => $place->category->color,
-            'lat' => (float) $place->latitude,
-            'lng' => (float) $place->longitude,
-            'url' => route('places.show', $place),
-        ]);
+        $places = $this->filteredPlaces($request);
 
-        return response()->json($places);
+        return response()->json([
+            'count' => $places->count(),
+            'html' => view('places._list', compact('places'))->render(),
+            'pins' => $places->map(fn ($place) => [
+                'id' => $place->id,
+                'name' => $place->name,
+                'category' => $place->category->name,
+                'color' => $place->category->color,
+                'lat' => (float) $place->latitude,
+                'lng' => (float) $place->longitude,
+                'url' => route('places.show', $place),
+            ]),
+        ]);
+    }
+
+    private function filteredPlaces(Request $request)
+    {
+        return Place::with('category', 'user')
+            ->withCount('likes', 'comments')
+            ->when($request->category, fn ($query, $category) => $query->where('category_id', $category))
+            ->when($request->search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->get();
     }
 
     public function create()

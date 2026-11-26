@@ -14,16 +14,20 @@
         @endauth
     </div>
 
-    <div id="map" data-url="{{ route('places.mapData') }}" class="rounded shadow-sm mb-4" style="height: 400px;"></div>
+    <input type="search" id="search" class="form-control mb-2" placeholder="Search places..." autocomplete="off">
 
-    <div class="row g-3">
-        @forelse ($places as $place)
-            <div class="col-sm-6 col-lg-4">
-                @include('places._card')
-            </div>
-        @empty
-            <p class="text-muted">No places yet. Be the first to share one!</p>
-        @endforelse
+    <div id="category-filter" class="d-flex flex-wrap gap-2 mb-3">
+        <button type="button" class="btn btn-sm btn-dark" data-category="">All</button>
+        @foreach ($categories as $category)
+            <button type="button" class="btn btn-sm btn-outline-dark" data-category="{{ $category->id }}">{{ $category->name }}</button>
+        @endforeach
+    </div>
+
+    <div id="map" data-url="{{ route('places.search') }}" class="rounded shadow-sm mb-2" style="height: 400px;"></div>
+    <p class="small text-muted mb-3"><span id="result-count">{{ $places->count() }}</span> places found</p>
+
+    <div id="place-list" class="row g-3">
+        @include('places._list')
     </div>
 @endsection
 
